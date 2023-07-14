@@ -1,6 +1,8 @@
 <?php
 
 namespace Database\Seeders;
+use Database\Factories\TopicFactory;
+
 
 // use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
@@ -12,8 +14,10 @@ class DatabaseSeeder extends Seeder
      */
     public function run(): void
     {
+        \App\Models\Topic::factory()->count(10)->create();
 
-        \App\Models\Topic::factory(10)->create();
+
+        // \App\Models\Topic::factory(10)->create();
     //     //10  بحدد كم يوزر بدي انشا
     //     // carete  انشاء
     //     //   راح يكرر  الكود الموجود في يوزر فاكتروس

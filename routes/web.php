@@ -28,6 +28,9 @@ Route::get('/classrooms/create',[ClassroomsrController::class,'create'])
 ->name('classrooms.create');
 // لانه بدون باراميتر بحطه قبل show
 
+Route::post('/classrooms',[ClassroomsrController::class,'store'])
+->name('classrooms.store');
+
 Route::get('/classrooms/{classroom}/{edit?}',[ClassroomsrController::class,'show'])
 ->name('classrooms.show')
 ->where('classroom','\d+'); //reqular expersiion

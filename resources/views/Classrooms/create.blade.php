@@ -5,13 +5,15 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Create ClassRoom</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-9ndCyUaIbzAi2FUVXJi0CjmCapSmO7SnpJef0486qhLnuZ2cdeRhO02iuK6FUUVM" crossorigin="anonymous">
+   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-9ndCyUaIbzAi2FUVXJi0CjmCapSmO7SnpJef0486qhLnuZ2cdeRhO02iuK6FUUVM" crossorigin="anonymous">
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js" integrity="sha384-geWF76RCwLtnZ8qwWowPQNguL3RmwHVBC9FhGdlKrxdiJJigb/j/68SIy3Te4Bkz" crossorigin="anonymous"></script>
   </head>
   <body>
     <header class="mb-3">
         <nav class="navbar navbar-expand-lg bg-body-tertiary">
             <div class="container">
               <a class="navbar-brand" href="{{ route('classrooms.index')}}">{{ config('app.name' ,'laravel') }}</a>
+              {{--  بقرا القيمة بشكل مباشر من ملف config}}
               {{-- key in config (filename.key) --}}
               <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
                 <span class="navbar-toggler-icon"></span>
@@ -50,10 +52,10 @@
 
     <div class="container ">
     <h1>create classroom</h1>
-    <form  method="post">
-        {{-- <input type="hidden" name="_token" value="{{ csrf_token() }}">
-        {{ csrf_field() }} --}}
-        @csrf
+    <form action={{route('classrooms.store')}}  method="post">
+        <input type="hidden" name="_token" value="{{ csrf_token() }}">
+         {{ csrf_field() }}
+         @csrf 
         <div class="form-floating mb-4 mt-3">
             <input type="text" class="form-control" id="name" name = "name" placeholder="enter classroom name">
             <label for="name">ClassRoom Name</label>

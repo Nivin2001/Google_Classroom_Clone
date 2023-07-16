@@ -1,22 +1,40 @@
+@include('partial.header');
 
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>Document</title>
-</head>
-<body>
-<h1> My classrooms </h1>
-<p> Welcome {{$name}} ,<?= $title?>    <!--تكافء جملة echo !-->
-{{-- <a href="/classrooms/create">create</a> --}}
- <a href="{{ route('classrooms.create')}}">create </a>
- <a href="{{  route('classrooms.show',['1','hi']) }}">show </a>
-{{--
+    <div class="container ">
+    <h1>classroom</h1>
+    <div class="row">
 
-<a href="{{route('classromms.show',$classrooms->id)}}" class="btn btn-primary">View </a>
-<a href="{{route('classromms.upadte',$classrooms->id)}}" class="btn btn-primary">update </a>
-<a href="{{route('classromms.destroy',$classrooms->id)}}" class="btn btn-primary">Delete </a> --}} --}}
-</body>
-</html>
+    @foreach ($classroom as $classroom)
+    <!--
+        item inside the collection is the object of model
+        عملت array
+         ع ابجكت المودل
+        لذلك بقدر اوصل للعناصر الموجودة فيه عن طريق اسم  الحقل
+    -->
+    {{-- <li> {{$classroom->name}} </li> --}}
+    <div class="col-md-3">
+        <div class="card" style="width: 18rem;">
+            <img src="" class="card-img-top" alt="">
+            <div class="card-body">
+              <h5 class="card-title">{{$classroom->name}}</h5>
+            <p class="card-text">{{$classroom->section}}-{{$classroom->room}}</p>
+            <a href="{{ route('classrooms.show', $classroom->id) }}" class="btn btn-sm btn-primary">View</a>
+            <a href="{{ route('classrooms.edit', $classroom->id) }}" class="btn btn-sm btn-primary">Edit</a>
+
+                         <form action="{{route('classrooms.destroy',$classroom->id)}}" method="post">
+                @csrf
+                @method('delete')
+                <button type="submit" class="btn btn-small btn-danger">Delete </button>
+            </div>
+          </div>
+
+    </div>
+    @endforeach
+</div>
+</div>
+@include('partial.footer');
+
+
+
+
+

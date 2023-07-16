@@ -1,6 +1,7 @@
 <?php
 
 namespace Database\Seeders;
+use Illuminate\Support\Facades\DB;
 use Database\Factories\TopicFactory;
 
 
@@ -14,6 +15,7 @@ class DatabaseSeeder extends Seeder
      */
     public function run(): void
     {
+        
         \App\Models\Topic::factory()->count(10)->create();
 
 

@@ -1,17 +1,20 @@
 <?php
 
 namespace App\Http\Controllers;
-
+use App\Models\Topic;
 use Illuminate\Http\Request;
 
-class TopicsController extends Controller
+
+class TopicController extends Controller
 {
     /**
      * Display a listing of the resource.
      */
     public function index()
     {
-        //
+        // for show
+        $topic=Topic::orderBY('id','DESC')->get();
+        return view('Topics.index',compact('topic'));
     }
 
     /**
@@ -19,7 +22,8 @@ class TopicsController extends Controller
      */
     public function create()
     {
-        //
+             //return form from registerations
+             return view()->make('Topics.create');
     }
 
     /**

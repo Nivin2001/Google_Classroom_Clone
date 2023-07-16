@@ -31,12 +31,22 @@ Route::get('/classrooms/create',[ClassroomsrController::class,'create'])
 Route::post('/classrooms',[ClassroomsrController::class,'store'])
 ->name('classrooms.store');
 
-Route::get('/classrooms/{classroom}/{edit?}',[ClassroomsrController::class,'show'])
+Route::get('/classrooms/{classroom}',[ClassroomsrController::class,'show'])
 ->name('classrooms.show')
 ->where('classroom','\d+'); //reqular expersiion
 // بستخدمها عشان اتاكد اذا اليوزر دخل الايميل صح او لا
+Route::get('/classrooms/{classroom}/edit',[ClassroomsrController::class,'edit'])
+->name('classrooms.edit')
+->where('classroom','\d+');
 
-Route::get('/classrooms/edit/{id}',[ClassroomsrController::class,'edit']);
+Route::put('/classrooms/{classroom}',[ClassroomsrController::class,'update'])
+->name('classrooms.update')
+->where('classroom','\d+');
+
+Route::delete('/classrooms/{classroom}',[ClassroomsrController::class,'destroy'])
+->name('classrooms.destroy')
+->where('classroom','\d+');
+
 
 //Route Model Finding
 // Route::resource('/admin/classrooms', ClassroomsController::class)
@@ -46,5 +56,10 @@ Route::get('/classrooms/edit/{id}',[ClassroomsrController::class,'edit']);
 
 // ])
 // ->where(['classrooms'=>'/d+']);
+
+Route::get('/topics',[TopicController::class,'index'])
+//    لهاد الراوت registerionبمعنى لما اعمل
+//ويستدعيه راح يروح ع الكونترلور راح يروح ع دالة index
+->name('Topic.index');
 
 

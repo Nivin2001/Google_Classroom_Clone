@@ -10,11 +10,11 @@ class Topic extends Model
     use HasFactory;
     const CREATED_AT='created_at';
     const UPDATED_AT='updated_at';
-    protected $connection='Myaql';
+    protected $connection='mysql';
     protected $table='topics';
     protected $primaryKey='id';
     protected $keyType='int';
     public $incremanting=true;
-    public $timestamp=false;
+    public $timestamps=false;
 
 }

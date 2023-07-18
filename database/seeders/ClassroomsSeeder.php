@@ -4,6 +4,7 @@ namespace Database\Seeders;
 
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
+use Illuminate\Support\Facades\DB;
 
 class ClassroomsSeeder extends Seeder
 {
@@ -13,7 +14,7 @@ class ClassroomsSeeder extends Seeder
     public function run(): void
     {
         //
-        \DB::Table('classrooms')->insert([
+         DB::Table('classrooms')->insert([
             'name'=>'salwa',
             'code'=>'123',
             'section'=>'Laravel',

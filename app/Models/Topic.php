@@ -16,5 +16,10 @@ class Topic extends Model
     protected $keyType='int';
     public $incremanting=true;
     public $timestamps=false;
+    //with mass assigment method
+    protected $fillable=['name','Descrption','user_id','classroom_id'];
+
+
+
 
 }

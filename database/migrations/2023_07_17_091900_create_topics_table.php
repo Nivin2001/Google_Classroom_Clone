@@ -14,23 +14,25 @@ return new class extends Migration
         Schema::create('topics', function (Blueprint $table) {
             $table->id();
             $table->string('name');
+            $table->string('Description');
             $table->foreignId('classroom_id')
-            ->constrined()
-            ->caccadeOnDelete();
-            //م في داعي احتفظ بالتوبيك لو نحذف عندي الكلاس روم
+            ->constrained()
+            ->cascadeOnDelete();
+
             $table->foreignId('user_id')
             ->nullable()
             ->constrained()
             ->nullOnDelete();
-            // لوانحذف التوبيك بحتفظ باليوزر لكن بتصبح قيمته null
 
+            $table->timestamps();
         });
     }
+
     /**
      * Reverse the migrations.
      */
     public function down(): void
     {
-        //
+        Schema::dropIfExists('topics');
     }
 };

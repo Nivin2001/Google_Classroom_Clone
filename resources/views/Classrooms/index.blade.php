@@ -2,6 +2,9 @@
 
     <div class="container ">
     <h1>classroom</h1>
+
+    <x-alert/>
+    
     <div class="row">
 
     @foreach ($classroom as $classroom)

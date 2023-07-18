@@ -60,6 +60,28 @@ Route::delete('/classrooms/{classroom}',[ClassroomsrController::class,'destroy']
 Route::get('/topics',[TopicController::class,'index'])
 //    لهاد الراوت registerionبمعنى لما اعمل
 //ويستدعيه راح يروح ع الكونترلور راح يروح ع دالة index
-->name('Topic.index');
+->name('Topics.index');
+
+Route::get('/topics/create',[TopicController::class,'create'])
+->name('Topics.create');
+
+Route::post('/topics',[TopicController::class,'store'])
+->name('Topics.store');
+
+Route::get('/topics/{topic}',[TopicController::class,'show'])
+->name('topics.show')
+->where('topics','\d+'); //reqular expersiion
+
+Route::get('/topics/{topic}/edit',[TopicController::class,'edit'])
+->name('topics.edit')
+->where('topics','\d+');
+
+Route::put('/topics/{topic}',[TopicController::class,'update'])
+->name('topics.update')
+->where('topics','\d+');
+
+Route::delete('/topics/{topics}',[TopicController::class,'destroy'])
+->name('topics.destroy')
+->where('topics','\d+');
 
 

@@ -129,7 +129,7 @@ class ClassroomsrController extends Controller
         //هاي بمعنى عبي البيانات سواء كانت موجودة بالfillable
         //او لا ولا يحبذ استخدامها
 
-           // //PRG POST REsponse
+           // //PRG POST rdirect get
 
         return redirect()->route('classrooms.index');
         //return to home page
@@ -207,6 +207,7 @@ public function update(Request $request,$id)
    public function destroy($id)
    {
     Classroom::destroy($id);
+//    $count= Classroom::destroy($id);
     //بترجعلي عدد الصفوف الي تم حذفهم
     // Classroom::where('id','=',$id)->delete();
 

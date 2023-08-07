@@ -1,39 +1,35 @@
-@include('partial.header')
+@extends('Layouts.Master')
+{{-- // علشان احكي ان هاد الملف بستخدم هاد layouts --}}
+@section('title','classrooms')
+
+@section('content')
 
     <div class="container ">
 
     <h1>create classroom</h1>
-    <form action={{route('classrooms.store')}}  method="post">
+
+    @if($errors->any())
+    {{-- اذا كان  يوجد اي ايرور  --}}
+    {{-- //validation --}}
+    <div class="alert alert-danger">
+        <ul>
+        @foreach ($errors->all() as $error )
+        <li> {{$error}} </li>
+
+        @endforeach
+         </div>
+         @endif
+
+    <form action={{route('classrooms.store')}}  method="post" enctype="multipart/form-data">
         <input type="hidden" name="_token" value="{{ csrf_token() }}">
          {{ csrf_field() }}
          @csrf
-             <div class="form-floating mb-4 mt-3">
-            <input type="text" class="form-control" id="name" name = "name" placeholder="enter classroom name">
-            <label for="name">ClassRoom Name</label>
-          </div>
+         @include('Classrooms._form',[
+            'button_lable'=>'Create Room'
+         ])
 
-          <div class="form-floating mb-4">
-            <input type="text" class="form-control" id="section" name ="section" placeholder="enter section ">
-            <label for="section">Section</label>
-          </div>
-
-          <div class="form-floating mb-4">
-            <input type="text" class="form-control" id="subject" name ="subject" placeholder="enter subject ">
-            <label for="subject">Subject</label>
-          </div>
-
-          <div class="form-floating mb-4">
-            <input type="text" class="form-control" id="room" name ="room" placeholder="enter room ">
-            <label for="room">Room</label>
-          </div>
-
-          <div class="form-floating mb-4">
-            <input type="file" class="form-control" id="cover_image" name ="cover_image" placeholder="cover Image ">
-            <label for="cover_image">Cover Image</label>
-          </div>
-
-          <button type="submit" class="btn btn-primary ">Create ClassRoom</button>
     </form>
 </div>
-@include('partial.footer');
+
+@endsection
 

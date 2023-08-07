@@ -1,4 +1,8 @@
-@include('partial.header')
+@extends('Layouts.Master')
+{{-- // علشان احكي ان هاد الملف بستخدم هاد layouts --}}
+@section('title','Edit classrooms . $classroom->name')
+
+@section('content')
 
     <div class="container ">
 
@@ -18,33 +22,24 @@
          @method('put')
          {{-- لاني الدالة عندي put
          م بقدرر امرر في الفورم الا post --}}
+         {{-- @include('Classrooms._form') --}}
+           @include('Classrooms._form',[
+            'button_lable'=>'Update Classroom'
+         ])
+         
 
-             <div class="form-floating mb-4 mt-3">
-            <input type="text" class="form-control" id="name" value="{{$classroom->name}}" name = "name" placeholder="enter classroom name">
-            <label for="name">ClassRoom Name</label>
-          </div>
-{{-- لازم امرر القيم الحالية الموجودة عندي علشان اشوف شو بدي اعدل --}}
-          <div class="form-floating mb-4">
-            <input type="text" class="form-control" id="section" value="{{$classroom->section}}" name ="section" placeholder="enter section ">
-            <label for="section">Section</label>
-          </div>
-
-          <div class="form-floating mb-4">
-            <input type="text" class="form-control" id="subject" value="{{$classroom->subject}}" name ="subject" placeholder="enter subject ">
-            <label for="subject">Subject</label>
-          </div>
-
-          <div class="form-floating mb-4">
-            <input type="text" class="form-control" id="room" value="{{$classroom->room}}" name ="room" placeholder="enter room ">
-            <label for="room">Room</label>
-          </div>
+          {{-- <img src="/storage/{{$classroom->cover_image_path}}" class="card-img-top" alt=""> --}}
+          {{-- بدي الصورة تظهر عندي --}}
+{{--
+                 <img src="{{asset('storage/'.$classroom->cover_image_path)}}" class="card-img-top" alt="">
 
           <div class="form-floating mb-4">
             <input type="file" class="form-control" id="cover_image" name ="cover_image" placeholder="cover Image ">
             <label for="cover_image">Cover Image</label>
           </div>
 
-          <button type="submit" class="btn btn-primary ">update ClassRoom</button>
+          <button type="submit" class="btn btn-primary ">update ClassRoom</button> --}}
     </form>
 </div>
-@include('partial.footer');
+
+@endsection

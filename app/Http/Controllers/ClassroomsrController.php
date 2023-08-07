@@ -7,58 +7,59 @@ use App\Test;
 use Illuminate\Http\Request;
 use Illuminate\Http\Facaed\View;
 use App\Http\Controllers\Redirect;
+use App\Http\Requests\ClassroomRequest;
+use Exception;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Support\Facades\Redirect as FacadesRedirect;
 use Illuminate\support\str;
 use Illuminate\Validation\Rule;
 use Illuminate\Validation\ValidationException;
+use Illuminate\Contracts\Session\Session;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Session as FacadesSession;
+
+
+
 
 
 
 class ClassroomsrController extends Controller
 {
+    public function __construct()
+    {
+        $this->middleware('auth');
+        //middleware
+        // يطبق بعد انشاء الابجكت تبع الكونترلور
+
+    }
     //actions
     public function index(Request $request)
     {
-        //for show
-        // in service container
-        // order this object
-        //return response views redirect json date file
-        // echo $test->print();
-        // echo $request->url();
-        //بيرجعلي الرابط للابجكت الحالي
-    //     $name='nivin';
-    //   $title='web Developer';
+        // return the same value
+        // // dd(Auth::user());
+        // dd(Auth:: guard('web')->user());
 
-    //   return view ('Classrooms.index',compact('name','title'));
-      //علشان اقرا البيانات الموجودة في جدول classroom
-      //collection object
+
       $classroom=Classroom::orderBy('created_at','DESC')-> get();
+
+      $success=session('success');//return value of sucess in the session
+
+
       //get for return multiple row but first for return one single value
-      return view ('Classrooms.index',compact('classroom'));
+      return view ('Classrooms.index',compact('classroom','success'));
       //convert vaiable to array so we can make foreach
 
-    //   return redirect(route('home'));
-    //   return redirect('http://example.com');
-    // return redirect()->route('route.name');
-    //   return redirect()->route('classrooms.show',['1','nivin']);
-    //   return redirect()->action('ControllerName@method');
-
-
-
-
-
-
-
-
-
     }
+
     public function create(){
         //return form frpm registerations
-        return view()->make('Classrooms.create');
+        return view()->make('Classrooms.create',[
+            'classroom'=>new classroom(),//empty obj to use it
+        ]);
 
 
     }
+
     public function show(string $id) {
            //show single element
              // Classroom::where('id','=',$id)->first();
@@ -75,93 +76,43 @@ class ClassroomsrController extends Controller
         ]);
     }
 
-
-    public function store(Request $request):RedirectResponse
+    public function store(ClassroomRequest  $request)
     {
-           // تخزين البيانات الي رجعت من الفورم
-        // echo $request->post ('name');
-        // //post  بتجيب البيانات من body  فقط
-        // echo $request->query ('name');
-        // echo $request['name'];
-        //  بتاخد البيانات من arrayaccees
-
-        // dd($request->all());
-        // بترجعلي كل البيانات
-        //    dd($request->only('name','section'));
-        //    dd($request->execpt('name','section'));
 
 
-        //method 1
-        //instance from classroom model
-        $classroom=new Classroom();
-        //should be same name with column
-        $classroom->name=$request->post('name');
-        $classroom->section=$request->post('section');
-        $classroom->subject=$request->post('subject');
-        $classroom->room=$request->post('room');
-        $classroom->code=Str::random(8);//to 16
-        $classroom->save();//insert
+        if ($request->hasFile('cover_image')) {
+            $file = $request->file('cover_image'); // UploadedFile
+            $path = Classroom::uploadCoverImage($file);
+            //بينشيء ملف داخل الديسك الي أنشاءته
+            $request->merge([
+                'cover_image_path' => $path,
+            ]);
+            $validated['cover_image_path'] = $path;
+        }
 
-        // //PRG POST REsponse
+//
+//     //             In this part, you are using the merge method of the $request object to add the random code directly to the request object.
+//     //This is an alternative way to add data to the request.
+//     //The merge method merges the given array into the existing request data.
 
-        // return redirect()->route('classrooms.index');
-        // //return to home page
+//     // Both of these code blocks serve the same purpose of adding the random code to the request data.
 
-        //method2 massassigment
-        //لازم استخدم معها دالة fillable
-        //in model
-        //وبحدد الحقول الي بدي تظهر عندي ولازم يكون اسمها مطابق لاسم الجدول
-        // $date=$request->all();
-        // $date['code']=Str::random(8);
-        // $request->merge([
-        //     'code'=>Str::random(8),
+//             ]);
 
-        // ]);
-        // $classroom=Classroom::create($request->all());
+        $request->merge([
+            'code' => Str::random(8),
+        ]);
 
-        // $classroom=new Classroom($request->all());
-        // $classroom->save();
+        $validated = $request->validated();
+     $classroom = Classroom::create($request->all());// store the validated date in the database
 
-        // $classroom=new Classroom();
-        // $classroom->fill($request->all())->save;
-        // //بعبي الحقول مرة وحدة
-        // $classroom->forcefill($request->all())->save;
-        //هاي بمعنى عبي البيانات سواء كانت موجودة بالfillable
-        //او لا ولا يحبذ استخدامها
 
-           // //PRG POST rdirect get
+        return redirect()->route('classrooms.index')
+        ->with('success', 'classroom craeted successfully');
+    }
 
-        return redirect()->route('classrooms.index');
-        //return to home page
-// try{
-//         $request->validate([
-//             'name'=>'required|string|max|255',
-//             'section'=>'nullable|max|255',
-//             'subject'=>'string|max|255',
-//             'room'=>'string|max|255',
-//             'cover_image'=>[
-//                 'image',
-//                 Rule::dimensions([
-//                     'nullable',
-//                 'min_width' =>600,
-//                  'min_heigh' =>300,
 
-//                 ]),
-//             ],
 
-//         ]);
-
-//     }catch(ValidationException $e){
-//         return redirect()->back()
-//         ->withInput()
-//         ->withErrors([
-//             'name'=>'My error'
-
-//         ]);
-
-//     }
-
-}
 public function edit($id)
 {
     //بترجع العنصر الي بدي اعمله عليه تعديل
@@ -176,45 +127,68 @@ public function edit($id)
             // so it can be accessed within the view file.
         ]);
 }
-public function update(Request $request,$id)
-{
-    $classroom=Classroom::findOrFail($id);
-    // اذا طلبت id
-    // مش موجود بعطيني ايرور 404
-    // ممكن اعدل قيمة قيمة  او اعدلهم كلهم مرة وحدة
 
-      //method 1
-        //instance from classroom model
-        // $classroom=new Classroom();
-        // //should be same name with column
-        // $classroom->name=$request->post('name');
-        // $classroom->section=$request->post('section');
-        // $classroom->subject=$request->post('subject');
-        // $classroom->room=$request->post('room');
-        // $classroom->code=Str::random(8);//to 16
-        // $classroom->save();//update
+public function update(ClassroomRequest $request, $id)
+    {
+        $validated = $request->validated();
+        $classroom = Classroom::findOrFail($id);
+         // اذا طلبت id
+//     // مش موجود بعطيني ايرور 404
+//     // ممكن اعدل قيمة قيمة  او اعدلهم كلهم مرة وحدة
 
-        //2 mass assigment
+        if ($request->hasFile('cover_image')) {
+            $file = $request->file('cover_image'); // UploadedFile
+            $path = Classroom::uploadCoverImage($file);
+            $validated['cover_image_path'] = $path;
+        }
+        $old = $classroom->cover_image_path; // بدي احتفظ بالصورة القديمة اول
+        $classroom->update($validated); // وهيك بعمل تعديل ع الصورة بحتفظ بالصورة القديمة وبعدل  الصورة
 
-            $classroom->update($request->all());
-            // $classroom->fill($request->all())->save();
+        if ($old && $old != $classroom->cover_image_path) {
+               // بفحص اذا موجودة وااذ القيمة القديمة لا تساوي الجديدة . اذا م عملت هيك  ممكن يحذف الصورة القديمة بدون م اعمل تغديل ع الصورة الجديدة
+   // وبعدها بحذف
+            Classroom::deleteCoverImage($old);
+        }
+        // Session::flash('success','Classroom updated successfully');
+        // Session::flash('error','Test for error meesage');
 
-            //prg
-             return redirect()->route('classrooms.index');
-
-
-}
-   public function destroy($id)
-   {
-    Classroom::destroy($id);
-//    $count= Classroom::destroy($id);
-    //بترجعلي عدد الصفوف الي تم حذفهم
-    // Classroom::where('id','=',$id)->delete();
-
-    // $classroom=Classroom::find($id);//select
-    // $classroom->delete();//delete
-    // echo $classroom->$id;// after deleting object
-    return redirect()->route('classrooms.index');
-   }
+        return redirect()
+            ->route('classrooms.index')
+            ->with('success', 'Classroom updated successfully')
+            ->with('error', 'Test for error meesage');
+            // ->with('type', 'success');
     }
 
+    public function destroy($id)
+    {
+     Classroom::destroy($id);
+ //    $count= Classroom::destroy($id);
+     //بترجعلي عدد الصفوف الي تم حذفهم
+     // Classroom::where('id','=',$id)->delete();
+
+     // $classroom=Classroom::find($id);//select
+     // $classroom->delete();//delete
+     // echo $classroom->$id;// after deleting object
+     return redirect()->route('classrooms.index')
+     ->with('success', 'Classroom deleted successfully')
+     ->with('error', 'classroom deleted');
+    }
+
+
+
+
+
+//    public function destroy(Classroom $classroom,$id)
+//    //mpdel binding
+//    {
+//     $classroom = Classroom::findOrFail($id);
+//     $classroom->delete();
+
+//    $classroom::DeleteCoverImage($classroom->cover_image_path);// هيك بحذف الصورة
+
+//     return redirect()->route('classrooms.index')
+//     //flash message('name for flash message','argument')
+//     ->with('success','classroom deleted')
+//     ;
+//    }
+}

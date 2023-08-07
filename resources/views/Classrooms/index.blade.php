@@ -1,10 +1,21 @@
-@include('partial.header');
+@extends('Layouts.Master')
+{{-- // علشان احكي ان هاد الملف بستخدم هاد layouts --}}
+@section('title','classrooms')
+
+@section('content')
 
     <div class="container ">
     <h1>classroom</h1>
 
-    <x-alert/>
-    
+    @if(session('success'))
+    <div class="alert alert-success">
+        {{ session('success') }}
+    </div>
+@endif
+
+    {{-- <x-alert  name="success" id="success"/>
+    <x-alert  name="error" id="error"/> --}}
+
     <div class="row">
 
     @foreach ($classroom as $classroom)
@@ -17,7 +28,9 @@
     {{-- <li> {{$classroom->name}} </li> --}}
     <div class="col-md-3">
         <div class="card" style="width: 18rem;">
-            <img src="" class="card-img-top" alt="">
+{{-- @if($classroom->cover_image_path) --}}
+            <img src="storage/{{$classroom->cover_image_path}}" class="card-img-top" alt="">
+
             <div class="card-body">
               <h5 class="card-title">{{$classroom->name}}</h5>
             <p class="card-text">{{$classroom->section}}-{{$classroom->room}}</p>
@@ -35,7 +48,12 @@
     @endforeach
 </div>
 </div>
-@include('partial.footer');
+
+@endsection
+
+@pushif(true,'scripts')
+<script> console.log('@@stack') </script>
+@endpushif()
 
 
 

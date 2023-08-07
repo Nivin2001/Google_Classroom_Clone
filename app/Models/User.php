@@ -42,4 +42,28 @@ class User extends Authenticatable
         'email_verified_at' => 'datetime',
         'password' => 'hashed',
     ];
-}
+
+    public function classromms()
+
+
+        {
+            return $this->belongsToMany(
+                user::class,//realted model
+                'classroom_user',// pivot table
+                'classroom_id',// fk for cureent model in the pivot table
+                'user_id',//pk for cureent model
+                'id',//pk for realted model
+                'id',
+            )->where('role','=','teacher')
+            ->withPivot(['role' , 'created_at'])
+            ->as('join')
+            ;
+
+            }
+
+            public function createdClassromms()
+            {
+                $this->hasMany(Classroom::class,'user"id');
+            }
+    }
+

@@ -1,9 +1,24 @@
 <?php
 
 namespace App\Http\Controllers;
-use App\Models\Topic;
-use Illuminate\Http\Request;
 
+use App\Models\Classroom;
+use App\Test;
+use Illuminate\Http\Request;
+use Illuminate\Http\Facaed\View;
+use App\Http\Controllers\Redirect;
+use App\Http\Requests\ClassroomRequest;
+use App\Models\Topic;
+use Exception;
+use Illuminate\Http\RedirectResponse;
+use Illuminate\Support\Facades\Redirect as FacadesRedirect;
+use Illuminate\support\str;
+use Illuminate\Validation\Rule;
+use Illuminate\Validation\ValidationException;
+use Illuminate\Contracts\Session\Session;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Session as FacadesSession;
 
 class TopicController extends Controller
 {
@@ -32,20 +47,36 @@ class TopicController extends Controller
      */
     public function store(Request $request)
     {
-           //method 1
-        //instance from Topic model
-        $topic=new Topic();
-        //should be same name with column
-        $topic->name=$request->post('name');
-        $topic->Description=$request->post('Description');
-        $topic->user_id=$request->post('user_id');
-        $topic->classroom_id=$request->post('classroom_id');
-        $topic->save();//insert
 
 
+   // Validate the incoming data
+   $validatedData = $request->validate([
+    'name' => 'required|string|max:255',
+    'Description' => 'required|string',
+]);
 
-        //prg
-        return redirect()->route('Topics.index');
+// Create a new Topic using mass assignment
+    $topic = Topic::create($validatedData);
+
+// Redirect to the index route with a success message
+    return redirect()->route('topics.index')->with('success', 'Topic created successfully');
+
+
+        // // $validated=$request->validate([
+        // //     'name'=>'required',
+        // //     'Description'=>'required',
+        // // ]);
+        //    //method 1
+        // //instance from Topic model
+        // $topic=new Topic();
+        // //should be same name with column
+        // $topic->name=$request->post('name');
+        // $topic->Description=$request->post('Description');
+        // $topic->save();//insert
+
+        // return redirect()->route('topics.index')
+        // ->with('success', 'Topics craeted successfully');
+        // ;
 
     }
 

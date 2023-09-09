@@ -4,6 +4,8 @@ namespace App\Http\Controllers;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\LoginController;
 use App\Http\Controllers\ClassroomController;
+use App\Http\Controllers\JoinClassroomController;
+use App\Http\Controllers\ClassworkController;
 
 
 /*
@@ -22,14 +24,6 @@ Route::get('/', function () {
     return view('welcome');
 }) ->name('home') ->middleware('auth');
 
-
-Route::resources([
-    'topics'=>TopicController::class,
-    'classrooms'=>ClassroomsrController::class,
-    ],[
-    'middleware'=>['auth']
-    // بمعنى اليوزر مش راح يقدر يدخل عليهم الا اذا كان authanicated user
-    ]);
 
 Route::get('/login',[LoginController::class,'create'])
 ->name('login')
@@ -54,18 +48,118 @@ Route::middleware('auth')->group(function () {
 
 require __DIR__.'/auth.php';
 
-Route::get('/classrooms/{classrooms/people',[ClassworkController::class,'index'])
-    ->name('classrooms.people');
+// طريقة اخرى
 
-// Route::get('/classrooms/{classroom}/join',[JoinClassroomController::class,'create'])
-// ->name('classrooms.join');
-// Route::post('/classrooms/{classroom}/join',[JoinClassroomController::class,'store'])
-// ->name('classrooms.store');
+/// Route::middleware(['auth'])->group(function () {
+
+// Route::prefix('/classrooms/trashed') // كلهم ببداوا فيه
+// ->as('classrooms.')//بداية اسمه
+// ->controller(ClassroomsrController::class)// بعرف الكونترولر لحال وبعدها بعمل group
+// ->group(function () {
+
+//     Route::get('/',['trashed'])
+//     ->name('trashed');
+
+
+//     Route::put('/{classroom}',['restore'])
+//     ->name('restore');
+
+
+//     Route::delete('/{classroom}',['ForceDelete'])
+//     ->name('force-delete')
+//     ;
+// });
+//     Route::resources([
+//     'topics'=>TopicController::class,
+//     'classrooms'=>ClassroomsrController::class,
+//     ]);
+// });
+
+
+Route::get('plans',[PlansController::class,'index'])
+->name('plans');
+
+
+
+Route::middleware(['auth'])->group(function () {
+
+
+    Route::prefix('/classrooms/trashed')->controller(ClassroomsrController::class);
+
+        Route::get('/classrooms/trashed',[ClassroomsrController::class,'trashed'])
+        ->name('classrooms.trashed');
+
+
+        Route::put('/classrooms/trashed/{classroom}',[ClassroomsrController::class,'restore'])
+        ->name('classrooms.restore');
+
+
+        Route::delete('/classrooms/trashed/{classroom}',[ClassroomsrController::class,'ForceDelete'])
+        ->name('classrooms.force-delete')
+        ;
+
+        // لازم يكون authanticated
+        Route::get('/classrooms/{classroom}/join', [JoinClassroomController::class, 'create'])
+        // ->middleware('signed')
+        //بتاكد انو معمول اله signature  صح
+
+        ->name('classrooms.join');
+
+    Route::post('/classrooms/{classroom}/join', [JoinClassroomController::class, 'store']);
+
+    Route::get('classworks/{classwork}', [ClassworkController::class, 'show'])->name('classworks.show');
+
+
+        Route::resources([
+        'topics'=>TopicController::class,
+        'classrooms'=>ClassroomsrController::class,
+        // 'classrooms.classworks'=>ClassworkController::class ,
+        ]);
+
+        Route::resource('classrooms.classworks', ClassworkController::class)
+        ;
+
+        // nested resource (route)
+          //  /classrooms/{classroom}/classworks/{classwork}
+        // just in index create store
+
+
+        Route::get('/classrooms/{classrooms}/people',[classroomPeopleController::class,'index'])
+        ->name('classrooms.people');
+
+        Route::delete('/classrooms/{classrooms}/people',[classroomPeopleController::class,'destroy'])
+        ->name('classrooms.people.destroy');
+
+        Route::post('comments',[CommentsController::class,'store'])
+        ->name('comments.store');
+
+
+        Route::post('classworks/{classwork}/submissions',[SubmissionController::class,'store'])
+        ->name('submissions.store')
+        // ->middleware('can:submissions.create,classwork')
+        ;
+
+        Route::get('submissions/{submission}/file',[SubmissionController::class,'file'])
+        ->name('submissions.file');
+
+
+
+});
+
+
+
+
+
+
+
+
+
+
 
 
 
 // 'classrooms.classworks'=>ClassworkController::class
-// nested resource (route)
+
 
 
 

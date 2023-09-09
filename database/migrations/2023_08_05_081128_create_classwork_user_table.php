@@ -11,6 +11,8 @@ return new class extends Migration
      */
     public function up(): void
     {
+        /// The realtion is mnay to mnay between classroom and stusent
+        // so we make pivot table
         Schema::create('classwork_user', function (Blueprint $table) {
 
             $table->foreignId('classwork_id')
@@ -19,7 +21,7 @@ return new class extends Migration
 
             $table->foreignId('user_id')
             ->constrained()->cascadeOnDelete();
-            
+
             $table->float('grade')->nullable();
             $table->timestamp('submitted_at')->nullable();
             $table->enum('status',['assigned','draft','submitted','return'])
@@ -28,6 +30,9 @@ return new class extends Migration
 
 
             $table->primary(['classwork_id','user_id']);
+
+            $table->timestamp('updated_at')->nullable();
+
 
 
         });

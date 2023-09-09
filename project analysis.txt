@@ -1,0 +1,20 @@
+Google classroom clone 
+
+1-user(teacher student)
+name
+email id
+
+2-class
+
+The realtion between two table is many to many 
+
+3- classwork 
+(assigment material questions quiz)
+
+Assigment
+
+submission
+
+Quesions
+
+answers

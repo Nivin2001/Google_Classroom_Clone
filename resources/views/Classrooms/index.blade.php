@@ -29,21 +29,33 @@
     <div class="col-md-3">
         <div class="card" style="width: 18rem;">
 {{-- @if($classroom->cover_image_path) --}}
-            <img src="storage/{{$classroom->cover_image_path}}" class="card-img-top" alt="">
+@if ($classroom->cover_image_path)
+{{-- هيك استخدمت accessor
+بدل م استخدم
+<img src="storage/{{$classroom->cover_image_path}}" class="card-img-top" alt=""> --}}
+
+    <img src="{{ $classroom->cover_image_path }}" class="card-img-top" alt="">
+@else
+    <img src="https://placehold.co/600x400" class="card-img-top" alt="">
+@endif
+
+
 
             <div class="card-body">
               <h5 class="card-title">{{$classroom->name}}</h5>
             <p class="card-text">{{$classroom->section}}-{{$classroom->room}}</p>
-            <a href="{{ route('classrooms.show', $classroom->id) }}" class="btn btn-sm btn-primary">View</a>
-            <a href="{{ route('classrooms.edit', $classroom->id) }}" class="btn btn-sm btn-primary">Edit</a>
+            <div class="d-flex justify-content-between">
 
-                         <form action="{{route('classrooms.destroy',$classroom->id)}}" method="post">
-                @csrf
-                @method('delete')
-                <button type="submit" class="btn btn-small btn-danger">Delete </button>
-            </div>
+                    <a href="{{ $classroom->url }}" class="btn btn-sm btn-primary">View</a>
+                    <a href="{{ route('classrooms.edit', $classroom->id) }}" class="btn btn-sm btn-success">Edit</a>
+
+                                    <form action="{{route('classrooms.destroy',$classroom->id)}}" method="post">
+                        @csrf
+                        @method('delete')
+                        <button type="submit" class="btn btn-small btn-danger">Delete </button>
+                    </div>
           </div>
-
+        </div>
     </div>
     @endforeach
 </div>

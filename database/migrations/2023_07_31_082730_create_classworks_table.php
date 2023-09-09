@@ -13,9 +13,14 @@ return new class extends Migration
     {
         Schema::create('classworks', function (Blueprint $table) {
             $table->id();
+            // الكلاس ورك تابعة لكلاس روم
+            // واذا حذفت classwork
+            // الكلاس روم بحذفها
             $table->foreignId('classroom_id')
             ->constrained()
             ->cascadeOnDelete();
+
+            // تابع لاي يوزر ولما احذف الكلاس ورك بدي  تصبح قيمة اليوزر فارغ
 
             $table->foreignId('user_id')
             ->nullable()
@@ -30,13 +35,14 @@ return new class extends Migration
 
 
             $table->string('title');
-            $table->longText('description')->nullable();
+            $table->longText('description');
             $table->enum('type',['assigment','material','questions']);
             $table->enum('status',['published','draft'])
             ->default('published');
-            $table->timestamp('published_at')->nullable();
+            $table->timestamp('published_at');
             //take one value
-            $table->json('options')->nullable();//Java script object orinted ntation
+            $table->json('options');//Java script object orinted ntation
+            // for date
             //store additanal inormation
             $table->timestamps();
             //take two value

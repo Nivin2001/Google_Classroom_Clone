@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class Topic extends Model
 {
@@ -17,10 +18,13 @@ class Topic extends Model
     public $incremanting=true;
     public $timestamps=false;
     //with mass assigment method
-    protected $fillable=['name','Descrption','user_id','classroom_id'];
+    protected $fillable = ['name', 'Description', 'classroom_id'];
 
-    public function classworks()
+
+
+    public function classworks():HasMany
     {
+        //  topic has many classworks
         return $this->hasMany(Classwork::class,'topic_id','id');
     }
 

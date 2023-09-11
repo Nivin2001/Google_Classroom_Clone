@@ -28,6 +28,7 @@ class ClassroomsrController extends Controller
         $this->middleware('auth');
         //middleware
         // يطبق بعد انشاء الابجكت تبع الكونترلور
+        $this->authorizeResource(Classroom::class);
 
     }
     //actions
@@ -37,6 +38,8 @@ class ClassroomsrController extends Controller
         // return the same value
         // // dd(Auth::user());
         // dd(Auth:: guard('web')->user());
+
+        $this->authorize('view-any',Classroom::class);
 
 
       $classroom=Classroom::orderBy('created_at','DESC')-> get();
@@ -93,7 +96,7 @@ class ClassroomsrController extends Controller
     public function store(ClassroomRequest  $request)
     {
 
-        
+
 
         if ($request->hasFile('cover_image')) {
             $file = $request->file('cover_image'); // UploadedFile

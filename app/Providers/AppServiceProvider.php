@@ -8,6 +8,7 @@ use App\Models\Classwork;
 use Illuminate\Contracts\Pagination\Paginator;
 use Illuminate\Support\ServiceProvider;
 use Illuminate\Database\Eloquent\Relations\Relation;
+use Illuminate\Support\Facades\App;
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -29,7 +30,7 @@ class AppServiceProvider extends ServiceProvider
         // Paginator::defaultSimpleView('vendor.pagination.simle.bootstrap-5');
 
 
-
+      App::setlocale('ar');
 
         Relation::enforceMorphMap([
             'post' => post::class,

@@ -35,7 +35,7 @@ public function apply(Builder $builder, Model $model): void
         // بدي الي يشوف الكلاس روم فقط ال owner
         // والشخص الي عامل انضام سواء طالب او معلم
 ->where(function (Builder $query) use ($id){
-    $query ->where('user_id','=',$id)
+    $query ->where('classrooms.user_id','=',$id)
         ->orWhereExists(function (QueryBulider $query) use ($id) {
             $query->select(DB::raw(1))
             ->from('classroom_user')

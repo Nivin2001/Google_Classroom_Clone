@@ -19,7 +19,7 @@
     <h3>Classworks
         {{-- @if(Gate::allows('classworks.create',[$classroom])) --}}
 
-        @can('classworks.create',[$classwork])
+        @can('create',['App\\Models\Classwork'],$classroom)
         <div class="dropdown">
             <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton1"
                 data-bs-toggle="dropdown" aria-expanded="false">

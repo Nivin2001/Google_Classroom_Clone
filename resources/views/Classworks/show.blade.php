@@ -50,7 +50,6 @@
 
             <div class="mt-4 container ms-5">
                 @foreach ($classwork->comments as $comment)
-                {{-- هنا يجب استخدام متغير مختلف للتكرار لتجنب الاشتباك --}}
                 <div class="row container">
                     <div class="col-md-1">
                         <img

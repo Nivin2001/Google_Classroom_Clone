@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Events\ClassworkCreated;
 use App\Models\Classroom;
 use App\Models\Classwork;
 use Illuminate\Support\Facades\Gate;
@@ -17,7 +18,7 @@ class ClassworkController extends Controller
      *
      */
 
-     protected function getType()
+     protected function getType(Request $request)
      {
         $type=request()->query('type');
         $allowed_types=[
@@ -26,6 +27,7 @@ class ClassworkController extends Controller
         if(!in_array($type,$allowed_types)){
             $type=Classwork::Type_ASSIGNEMNT;
         }
+        return $type;
      }
 
 
@@ -34,12 +36,27 @@ class ClassworkController extends Controller
 
 
         $classroom=Classroom::findorfail($id);
+
         $classwork = Classwork::all();
                  //تطبيق الصلاحية
-        // $this->authorize('viewAny',[Classwork::class,$classroom]);
+        $this->authorize('viewAny',[Classwork::class,$classroom]);
 
         $classwork=$classroom->classworks()// realtion
         ->with('topic')//eager loading
+         ->withCount([
+            'users as turnedin_count' => function($query){
+                $query->where('classwork_user.status','submitted');
+            },
+            'users as assigned_count' => function($query){
+                $query->where('classwork_user.status','assigned');
+            },
+            'users as graded_count' => function($query){
+                $query->whereNotNull('classwork_user.grade');
+            },
+            ])
+
+
+
         ->filter($request->query())
         ->latest('published_at','DESC')
             ->orderBy('published_at')// Query bulider
@@ -66,11 +83,13 @@ class ClassworkController extends Controller
     {
 
         $classroom = Classroom::find($id);
-        $response=Gate::inspect('classworks.create',[$classroom]);
-        //policy
-        Gate::authorize('classworks.create',[Classwork::class,$classroom]);
-        $type = $this->getType($request);
+        $this->authorize('create',[Classwork::class,$classroom]);
+        $type = $this->getType($request)->value ?? 'default_value';
+
+
+
         $classwork=new Classwork();
+
           // if (!$response->allowed()){
         //     abort(403,$response->message() ?? '');
         // }
@@ -79,6 +98,10 @@ class ClassworkController extends Controller
         //     // اذا م معه هاي الصلاحية يطلعله هاد الخطا
         //     abort(403);
         // }
+
+              // $response=Gate::inspect('classworks.create',[$classroom]);
+        // //policy
+        // Gate::authorize('classworks.create',[Classwork::class,$classroom]);
 
         return view('classworks.create', compact('classroom','classwork' ,'type'));
     }
@@ -90,7 +113,8 @@ class ClassworkController extends Controller
     {
         //
         $classroom = Classroom::find($id);
-        Gate::authorize('classworks.create',[Classwork::class,$classroom]);
+        $this->authorize('create',[Classwork::class,$classroom]);
+        // Gate::authorize('classworks.create',[Classwork::class,$classroom]);
 
         $type=$this->getType($request);
         // $request->validate([
@@ -108,6 +132,7 @@ class ClassworkController extends Controller
 
         ]);
         try{
+            strip_tags('<h1>Title </h1> <p>sss </p><script>alert() </script>');
 
 
         DB::transaction(function () use($classroom ,$request,$type) {
@@ -138,13 +163,17 @@ class ClassworkController extends Controller
 
             $classwork=$classroom->classworks()->create($date);
             // بضيف البيانات مرة وحدة بينعمل الها checked
+          $classwork->users()->attach($request->input('students'));
 
-    //    $classwork->users->attach($request->input('student'));
 
-       $classwork->users()->attach($request->input('users'));
+    //    $classwork->users()->attach($request->input('users'));
+
+
+       ClassworkCreated::dispatch($classwork);
 
         });
-    }catch(QueryException $e){
+    }catch(\Exception $e){
+
         return back()->with('error',$e->getMessage());
     }
        return redirect()
@@ -164,6 +193,7 @@ class ClassworkController extends Controller
     $classroom = Classroom::findOrFail($id);
 
     $classwork = Classwork::with('comments.user')->findOrFail($classwork_id);
+    $this->authorize('view',$classwork);
 
 //    Gate::authorize('classworks.view',[$classroom]);
 //         // اذا م معه هاي الصلاحية يطلعله هاد الخطا
@@ -211,12 +241,17 @@ class ClassworkController extends Controller
 
         $classwork = Classwork::findOrFail($classworkId);
         $this->authorize($classwork);
+        $type=$classwork->type;
+        $description=strip_tags($request->post('descripation'),['h1','p1','ol','li']);
 
-        $classwork->update($request->all());
+        $classwork->update([
+            'descripation' => $description,
+
+        ]);
         // بتتخزن البيانات في مصفوفة ولازم تكون هاي البيانات الموجودة بالجدول وتكون متطابقة
         // $classwork->users()->sync($request->input('students'));
 
-        return back()
+        return  back()
         ->with('success',__('classwork updated'));
     }
 

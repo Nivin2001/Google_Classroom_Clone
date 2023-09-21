@@ -23,6 +23,8 @@ class Classwork extends Model
 
     const STATUS_PUBLISHED='published';
     const STATUS_DRAFT='draft';
+
+
     protected $fillable=[
         // column in datbase
         'classroom_id','user_id','topic_id','title','description',
@@ -78,13 +80,18 @@ class Classwork extends Model
     }
 
 
-    public function topic():BelongsTo
+    public function user():BelongsTo
 
     {
-        // topic belongs to one classwork
-        return $this->belongsTo(Topic::class);
+        // user belongs to one classwork
+        return $this->belongsTo(User::class);
     }
 
+    public function topic() :BelongsTo
+    {
+        // topic belongs to one classwork
+        return $this->belongsTo(Topic::class ,'topic_id','id');
+    }
     public function users()
 {
     return $this->belongsToMany(User::class)
@@ -106,6 +113,10 @@ class Classwork extends Model
     return $this->hasMany(submission::class);
     }
 
+    public  function stream()
+    {
+        return $this->hasMany(Stream::class);
+    }
 
 
 }

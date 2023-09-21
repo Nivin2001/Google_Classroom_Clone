@@ -28,7 +28,7 @@ class ClassroomsrController extends Controller
         $this->middleware('auth');
         //middleware
         // يطبق بعد انشاء الابجكت تبع الكونترلور
-        $this->authorizeResource(Classroom::class);
+        // $this->authorizeResource(Classroom::class);
 
     }
     //actions

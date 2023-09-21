@@ -17,6 +17,7 @@
     @endif
 </div>
     <hr>
+   
     <form action="{{ route('classrooms.classworks.update' , [$classroom->id , $classwork->id]) }}" method="post" class="form-floating">
     @csrf
     @method('put')
@@ -25,6 +26,7 @@
     </div>
 
     <button type="submit" class="btn btn-primary mx-5"> Update </button>
+
 
     </form>
 @endsection

@@ -24,10 +24,10 @@
 
     <div class="row">
         <div class="col-md-8">
-
             <div>
-              <h3 style="font-weight: lighter">{{ $classwork->description }}</h3>
-
+                 {!! $classwork->description !!}
+            </div>
+            <div>
                 <h4> comments </h4>
             </div>
 
@@ -70,7 +70,7 @@
 
             <div class="bordered rounded p-3 bg-secondary bg-gradient ">
                 <h4>Submissions</h4>
-                @can('submissions.create',[$classwork])
+                {{-- @can('submissions.create',[$classwork]) --}}
                 @if($submissions->count())
                 <ul>
                     @foreach ($submissions as $submission)
@@ -98,7 +98,7 @@
                     </div>
                 </form>
             </div>
-            @endcan
+            {{-- @endcan --}}
 
         </div>
     </div>

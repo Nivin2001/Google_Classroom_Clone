@@ -6,7 +6,7 @@ use App\Http\Controllers\LoginController;
 use App\Http\Controllers\ClassroomController;
 use App\Http\Controllers\JoinClassroomController;
 use App\Http\Controllers\ClassworkController;
-
+use App\Http\Middleware\ApplyUserPreferences;
 
 /*
 |--------------------------------------------------------------------------
@@ -136,7 +136,7 @@ Route::middleware(['auth'])->group(function () {
 
         Route::post('classworks/{classwork}/submissions',[SubmissionController::class,'store'])
         ->name('submissions.store')
-        ->middleware('can:create,App\Model\Classwork')
+        ->middleware('can:create,App\Model\ClassworK')
         ;
 
         Route::get('submissions/{submission}/file',[SubmissionController::class,'file'])

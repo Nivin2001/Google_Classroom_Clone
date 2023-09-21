@@ -9,21 +9,13 @@ use Illuminate\Auth\Access\Response;
 
 class ClassworkPolicy
 {
-    /**
-     * Determine whether the user can view any models.
-     */
 
-     protected  $policies =[
-        classwork::class =>ClassworkPolicy::class,
-        Classroom::class =>ClassroomPolicy::class,
-
-     ];
 
      public function before(User $user,$ability)
      {
 
         {
-            if($user->super_admin)
+            // if($user->super_admin)
             return true;
 
         }
@@ -31,15 +23,11 @@ class ClassworkPolicy
     public function viewAny(User $user , Classroom $classroom): bool
     {
 
-        //
+        //index
         // dd($classroom);
-        return $user->classrooms()
-
-
-        ->wherePivot('classroom_id', '=', $classroom->classroom_id)
+        return $user->classrooms()->withoutGlobalScope(UserClassroomScope::class)
+        ->wherePivot('classroom_id', '=', $classroom->id)
         ->exists();
-
-
 
     }
 
@@ -48,18 +36,20 @@ class ClassworkPolicy
      */
     public function view(User $user, classwork $classwork): bool
     {
-        //
+        //show
+        // dd($user->classworks);
+
         $teacher=$user->classrooms()
+        ->withoutGlobalScope(UserClassroomScope::class)
         ->wherePivot('classroom_id', '=', $classwork->classroom_id)
         ->wherePivot('role', '=', 'teacher')
         ->exists();
 
         $assigned=$user->classworks()
-        ->wherePivot('classwork_id', '=', $classwork->classroom_id)
-        ->wherePivot('role', '=', 'teacher')
+        ->wherePivot('classwork_id', '=', $classwork->id)
         ->exists();
-
         return ($teacher || $assigned);
+
 
     }
 
@@ -72,9 +62,13 @@ class ClassworkPolicy
         $result=$user->classrooms()
         ->withoutGlobalScope(UserClassroomScope::class)
         ->wherePivot('classroom_id', '=', $classroom->id)
-        ->wherePivot('role', '=', 'teacher');
+        ->wherePivot('role', '=', 'teacher')
+        ->exists();
 
-       return ($result);
+       return $result
+
+       ? Response::allow()
+       : Response::deny('You are not teacher in this classwork');
     }
 
     /**
@@ -83,12 +77,17 @@ class ClassworkPolicy
     public function update(User $user, classwork $classwork): bool
     {
         //
-
-        $user->classrooms()
+        $assigned =  $classwork->user_id == $user->id ;
+       $teacher= $user->classrooms()
         ->wherePivot('classroom_id', '=', $classwork->classroom->id)
         ->wherePivot('role', '=', 'teacher')
-        ->where('user_id', $user->id)
+        ->where('classroom_user.user_id', $user->id)
         ->exists();
+
+        return ($assigned && $teacher );
+
+        // return ($result);
+
     }
 
     /**

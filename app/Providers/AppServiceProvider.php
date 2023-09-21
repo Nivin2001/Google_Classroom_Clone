@@ -9,6 +9,7 @@ use Illuminate\Contracts\Pagination\Paginator;
 use Illuminate\Support\ServiceProvider;
 use Illuminate\Database\Eloquent\Relations\Relation;
 use Illuminate\Support\Facades\App;
+use Illuminate\Support\Facades\Auth;
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -28,9 +29,10 @@ class AppServiceProvider extends ServiceProvider
     {
         // Paginator::defaultView('vendor.pagination.bootstrap-5');
         // Paginator::defaultSimpleView('vendor.pagination.simle.bootstrap-5');
+        // $user=Auth::user();
 
 
-      App::setlocale('ar');
+    //   App::setlocale('ar');
 
         Relation::enforceMorphMap([
             'post' => post::class,

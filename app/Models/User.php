@@ -9,12 +9,14 @@ use App\Models\comment;
 use App\Models\Classroom;
 use App\Models\Classwork;
 use App\Models\ClassworkUser;
+use Illuminate\Contracts\Auth\MustVerifyEmail;
+use Illuminate\Contracts\Translation\HasLocalePreference;
 use Laravel\Sanctum\HasApiTokens;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 
-class User extends Authenticatable
+class User extends Authenticatable implements MustVerifyEmail, HasLocalePreference
 {
     use HasApiTokens, HasFactory, Notifiable;
 
@@ -130,6 +132,44 @@ class User extends Authenticatable
         {
             return $this->hasMany(submission::class);
         }
+
+        public function profile()
+        {
+
+            return $this->hasOne(Profile::class,'user_id','id')
+            //مش مضمون كل يوزر اله profile
+            ->withDefault();
+        }
+
+        public function routeNoticationForMail($notification=null){
+            // coustomize email
+            return $this->email;
+        }
+
+        public function routeNoticationForVonage($notification=null){
+            // coustomize phone
+            return '9788215663';
+        }
+
+        public function routeNoticationForHadara($notification=null){
+            // coustomize phone
+            return '9788215663';
+        }
+
+        public function recievesBroadcastNotificationsOn()
+        {
+            //customize channel
+            return 'Notifications.' . $this->id;
+        }
+
+
+
+        public function preferredLocale()
+        { //لازم نعمللها implement HasLocalePreferences
+            return $this->profile->locale;
+            // return 'ar';
+        }
+
 
             }
 

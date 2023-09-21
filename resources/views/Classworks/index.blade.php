@@ -19,7 +19,7 @@
     <h3>Classworks
         {{-- @if(Gate::allows('classworks.create',[$classroom])) --}}
 
-        @can('create',['App\\Models\Classwork'],$classroom)
+        @can('create',['App\Models\Classwork',$classroom])
         <div class="dropdown">
             <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton1"
                 data-bs-toggle="dropdown" aria-expanded="false">
@@ -68,11 +68,43 @@
                 <div id="flush-collapse{{ $classworkItem->id }}" class="accordion-collapse collapse"
                     aria-labelledby="flush-heading{{ $classworkItem->id }}" data-bs-parent="#accordionFlushExample">
                     <div class="accordion-body">
-                        @if ($classworkItem->description)
-                            {{ $classworkItem->description }}
-                        @else
+                        <div class="row">
+                            <div class="col-md-6">
+
+
+                               @if ($classworkItem->description)
+                                {!! $classworkItem->description !!}
+                            </div>
+                            @else
                             No description available.
                         @endif
+
+                            <div class="col-md-6 row">
+                                <div class="col-md-4">
+                                    <div class="fs-3">
+                                        {{ $classworkItem->users->count() }}
+
+                                    </div>
+                                    <div Assigned Users: class="text-muted">{{ __('Assigned') }}</div>
+                                </div>
+
+                                <div class="col-md-4">
+                                    <div class="fs-3">
+                                        {{ $classworkItem->turnedin_count }}
+                                    </div>
+                                    <div class="text-muted">{{ __('Turned In') }}</div>
+                                </div>
+
+                                <div class="col-md-4">
+                                    <div class="fs-3">
+                                        {{ $classworkItem->graded_count }}
+                                    </div>
+                                    <div class="text-muted">{{ __('Graded') }}</div>
+                                </div>
+
+
+
+
                         <div class="mt-2"> <!-- Add margin-top class for spacing -->
                             @foreach ($classwork as $singleClasswork)
                             @if (is_object($singleClasswork) && isset($singleClasswork->classroom))
@@ -106,20 +138,22 @@
         {{ $classwork->withQueryString()->appends(['v1' => 1])->links('vendor.pagination.bootstrap-5') }}
     </div>
     <!-- End Pagination -->
-
 </div>
+
+@push('scripts')
+{{-- <script>
+// "{{ $classwork->classroom_id}}"
+    dd($classwork)
+</script> --}}
+
+@endpush
+
+
+
+
+
 @endsection
 
-
-
-        {{-- <div class="accordion-body">
-           <a href="{{ route('classrooms.classworks.edit' , [$classroom->id ,$classWorks->id ]) }}"><i class="fa-solid fa-pen"></i>edit</a>
-            <form action="{{ route('classrooms.classworks.destroy' , [$classroom->id , $classWorks->id]) }}" method="post">
-                @csrf
-                @method('delete')
-               <button type="submit"> <i class="fa-solid fa-trash text-dark"></i> </button>
-            </form>
-        </div> --}}
 
 
 

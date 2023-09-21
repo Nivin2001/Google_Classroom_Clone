@@ -19,8 +19,9 @@ class AuthServiceProvider extends ServiceProvider
      * @var array<class-string, class-string>
      */
     protected $policies = [
-        //
+        ClassroomWork::class => ClassroomWorkPolicy::class,
     ];
+
 
     /**
      * Register any authentication / authorization services.
@@ -94,24 +95,22 @@ class AuthServiceProvider extends ServiceProvider
 
         // });
 
-    //     Gate::define('submissions.create',function (User $user,Classwork $classwork){
-    //         $teacher= $user->classrooms()
-    //         ->wherrPivot('classroom_id','=',$classwork->classroom_id)
-    //         ->wherePivot('role','=','teacher')
-    //                     ->exists();
-    //                if($teacher)
-    //                {
-    //                 // اذا كان معلم م معه صلاحية انه يسلم
-    //                 return false;
-    //                }
+        Gate::define('submissions.create', function (User $user, Classwork $classwork) {
+            // Check if the user is a teacher in the classroom
+            $teacher = $user->classrooms()
+                ->withoutGlobalScope(UserClassroomScope::class)
+                ->wherePivot('classroom_id', '=', $classwork->classroom_id)
+                ->wherePivot('role', '=', 'teacher')
+                ->exists();
 
+            // Check if the user is assigned to the classwork
+            $assigned = $user->classworks()
+                ->wherePivot('classwork_id', '=', $classwork->id)
+                ->exists();
 
+            // Allow access if the user is assigned and not a teacher
+            return !$teacher && $assigned;
+        });
 
-    //        return $user->classworks()
-    //        ->wherrPivot('classwork_id','=',$classwork->id)
-    //        ->exists();
-
-
-    // });
 }
 }

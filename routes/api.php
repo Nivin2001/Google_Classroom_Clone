@@ -25,8 +25,8 @@ Route::prefix('v1')->group(function(){
 
     });
 
-    Route::apiResource('/classrooms',ClassroomsController ::class);
-Route::apiResource('/classrooms.classworks',ClassworkController ::class);
+     Route::apiResource('/classrooms',ClassroomsController ::class);
+// Route::apiResource('/classrooms.classworks',ClassworkController ::class);
 });
 // بتستني edit ,update,delete
 

@@ -12,8 +12,8 @@
         {{ session('success') }}
     </div>
 @endif
-   {!!__('pagination.next')!!}
-   {!!'<h1> Test </h1>'!!}
+   {{-- {!!__('pagination.next')!!}
+   {!!'<h1> Test </h1>'!!} --}}
 
 
 

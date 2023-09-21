@@ -13,8 +13,17 @@ use Illuminate\Support\Facades\Response;
 class ClassroomsController extends Controller
 {
     //
+
+    public function  __construct()
+    {
+        $this->middleware('auth');
+        $this->authorizeResource(Classroom::class,'classroom');
+
+    }
     public function index()
     {
+        // return Classroom::all();
+        $this->authorize('view-any',Classroom::class);
         $classrooms = Classroom::with('user:id,name', 'topics')
             ->withCount('student as students')
             ->paginate(2);
